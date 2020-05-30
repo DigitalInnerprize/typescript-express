@@ -1,0 +1,46 @@
+version: "3.8"
+services:
+  mongo:
+    image: mongo
+    container_name: mongo
+    restart: always
+    ports:
+      - "${MONGO_PORT}:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "${MONGO_USERNAME}"
+      MONGO_INITDB_ROOT_PASSWORD: "${MONGO_PASSWORD}"
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    ports:
+      - "${ME_PORT}:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: "${MONGO_USERNAME}"
+      ME_CONFIG_MONGODB_ADMINPASSWORD: "${MONGO_PASSWORD}"
+
+  api:
+    container_name: api
+    build:
+      dockerfile: Dockerfile
+      target: dev
+      context: ./
+    volumes:
+      - /app/node_modules
+      - .:/app
+    restart: on-failure
+    command: npm run dev
+    links:
+      - mongo
+    ports:
+      - "${DOCKER_NODE_PORT}:${DOCKER_NODE_PORT}"
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_USERNAME
+      - MONGO_PASSWORD
+      - NODE_ENV
+
+volumes:
+  mongo: ~
