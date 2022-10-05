@@ -1,10 +1,10 @@
-import notFound from './notFound.js'
+import notFound from './notFound'
 import errorHandler from './errorHandler'
-import isAuthorized from './isAuthorized.js'
-import isLoggedIn from './isLoggedIn.js'
+import isAuthorized from './isAuthorized'
+import isLoggedIn from './isLoggedIn'
 import allowCors from './allowCors'
 
-export {
+export default {
 	notFound,
 	errorHandler,
   isAuthorized,

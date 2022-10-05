@@ -1,11 +1,11 @@
 /* eslint-disable prefer-destructuring */
 import 'dotenv/config';
-import { log } from './utils/logger';
 import express, { Application } from 'express';
-import { connect } from './db/db';
+// import { connect } from './db/db';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
+import middlewares from './middlewares';
 
 const app: Application = express();
 
@@ -20,9 +20,16 @@ app.use(
 );
 app.use(express.json());
 
-(async () => {
-  await connect();
-  app.listen(port, () => {
-    log.info(`Listening at http://localhost:${port}`);
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Hello World!',
   });
-})();
+});
+
+/* these routes need to be last for 404 and errorHandler */
+app.use(middlewares.notFound);
+app.use(middlewares.errorHandler)
+
+app.listen(port, () => {
+  console.log(`Listening at http://localhost:${port}`);
+});
